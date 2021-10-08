@@ -490,7 +490,7 @@ Implement a function that returns the last digit of a given number.
   whether it works for you!
 -}
 lastDigit :: Int -> Int
-lastDigit n = mod n 10
+lastDigit n = mod (abs n) 10
 
 {- |
 =⚔️= Task 6
@@ -522,6 +522,8 @@ closestToZero :: Int -> Int -> Int
 closestToZero x y
  | abs(x) < abs(y) = x
  | abs(y) < abs(x) = y
+ | abs(x) == abs(y) = x
+ | otherwise = error "Sorry, something goes wrong!"
 
 {- |
 =⚔️= Task 7
@@ -561,7 +563,12 @@ mid x y z
   | y < z && y > x = y
   | z < x && z > y = z
   | z < y && z > x = z
-  | otherwise = error "numbers should be different"
+  | z == x && z == y = x
+  | z == x && z /= y = z
+  | z == y && y /= x = z
+  | x == y && y /= z = x
+  | otherwise = error "Sorry, something goes wrong!"
+
 {- |
 =⚔️= Task 8
 
@@ -645,13 +652,13 @@ Try to introduce variables in this task (either with let-in or where) to avoid
 specifying complex expressions.
 -}
 sumLast2 :: Int -> Int
-sumLast2 n = firstDigit n + lastDigit n
+sumLast2 n = let asAbsolute = abs n in secondDigit asAbsolute + lastOneDigit asAbsolute
   where
-    lastDigit :: Int -> Int
-    lastDigit x = mod x 10
+    lastOneDigit :: Int -> Int
+    lastOneDigit x = mod x 10
 
-    firstDigit :: Int -> Int
-    firstDigit x = div ( (mod x 100) - (mod x 10) ) 10
+    secondDigit :: Int -> Int
+    secondDigit x = div ( (mod x 100) - (mod x 10) ) 10
 
 
 {- |
@@ -672,12 +679,13 @@ You need to use recursion in this task. Feel free to return to it later, if you
 aren't ready for this boss yet!
 -}
 
+firstDigit :: Int -> Int
 firstDigit n
-  | divideByTen n == 0 = n
+  | abs n <= 9 = abs n
   | otherwise = firstDigit $ divideByTen n
     where
       divideByTen :: Int -> Int
-      divideByTen x = div x 10
+      divideByTen x = div (abs x) 10
 
 
 {-
